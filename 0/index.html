@@ -1,54 +1,147 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Project 0</title>
+    <title>Project 0 | CS180 Portfolio</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style>
       body {
-        font-family: Arial, sans-serif;
-        margin: 20px;
+        font-family: "Segoe UI", Arial, sans-serif;
+        margin: 0;
+        background: linear-gradient(120deg, #f0fdfa 0%, #e0e7ff 100%);
+        color: #22223b;
       }
-      img,
-      video {
-        max-width: 400px;
-        margin: 10px 0;
-        display: block;
+      header {
+        background: #3a86ff;
+        color: #fff;
+        padding: 28px 0 18px 0;
+        text-align: center;
+        border-bottom-left-radius: 32px;
+        border-bottom-right-radius: 32px;
+        box-shadow: 0 4px 24px rgba(58, 134, 255, 0.1);
+      }
+      header h1 {
+        margin: 0 0 8px 0;
+        font-size: 2.1rem;
+        letter-spacing: 1px;
+      }
+      header a {
+        color: #fff;
+        text-decoration: underline;
+        font-size: 1rem;
+        position: absolute;
+        left: 24px;
+        top: 32px;
+      }
+      main {
+        max-width: 800px;
+        margin: 36px auto;
+        background: #fff;
+        border-radius: 20px;
+        box-shadow: 0 2px 16px rgba(58, 134, 255, 0.08);
+        padding: 32px 24px;
+      }
+      h2 {
+        color: #3a86ff;
+        margin-top: 0;
+      }
+      .section {
+        margin-bottom: 36px;
+      }
+      .desc {
+        font-size: 1.08rem;
+        color: #444;
+        margin-bottom: 12px;
       }
       .side-by-side {
         display: flex;
-        gap: 20px;
+        gap: 24px;
         align-items: flex-start;
+        justify-content: center;
+        margin-bottom: 12px;
       }
       .side-by-side img {
         display: inline-block;
         max-width: 48%;
-        margin: 0;
+        border-radius: 12px;
+        box-shadow: 0 2px 12px rgba(58, 134, 255, 0.1);
+        transition: transform 0.18s;
+      }
+      .side-by-side img:hover {
+        transform: scale(1.04) rotate(-1deg);
+      }
+      .large-gif {
+        max-width: 400px;
+        width: 100%;
+        height: auto;
+        display: block;
+        margin: 0 auto 10px auto;
+        border-radius: 14px;
+        box-shadow: 0 2px 12px rgba(58, 134, 255, 0.1);
+        transition: transform 0.18s;
+      }
+      .large-gif:hover {
+        transform: scale(1.04) rotate(1deg);
+      }
+      @media (max-width: 700px) {
+        main {
+          padding: 12px 2vw;
+        }
+        .side-by-side {
+          flex-direction: column;
+          gap: 10px;
+        }
+        .side-by-side img {
+          max-width: 100%;
+        }
+        .large-gif {
+          max-width: 100%;
+        }
       }
     </style>
   </head>
   <body>
-    <h1>Project 0</h1>
-    <a href="../index.html">Back to Portfolio</a>
-    <h2>Media</h2>
-    <p>
-      <strong>Part 1: The Wrong Way vs. The Right Way</strong> Captured two
-      photos of William at different zoom levels (1x and 5x).
-    </p>
-    <div class="side-by-side">
-      <img src="media/William_1x.JPG" alt="William 1x" />
-      <img src="media/William_5x.JPG" alt="William 5x" />
-    </div>
-    <p>
-      <strong>Part 2: Architectural Perspective Compression</strong> Captured
-      Haas
-    </p>
-    <div class="side-by-side">
-      <img src="media/William_1x.JPG" alt="William 1x" />
-      <img src="media/William_5x.JPG" alt="William 5x" />
-    </div>
-    <p>
-      <strong>Part 3: The Dolly Zoom</strong> Created an animated GIF of stuffed
-      animals using multiple frames.
-    </p>
-    <img src="media/Stuffed_Animals.gif" alt="Stuffed Animals GIF" />
+    <header>
+      <a href="../index.html">&#8592; Back to Portfolio</a>
+      <h1>Project 0: Camera Effects &amp; Media</h1>
+    </header>
+    <main>
+      <div class="section">
+        <h2>Part 1: The Wrong Way vs. The Right Way</h2>
+        <div class="desc">
+          Captured two photos of William at different zoom levels (1x and 5x) to
+          demonstrate the effect of focal length on perspective and subject
+          appearance.
+        </div>
+        <div class="side-by-side">
+          <img src="media/William_1x.JPG" alt="William 1x" />
+          <img src="media/William_5x.JPG" alt="William 5x" />
+        </div>
+      </div>
+      <div class="section">
+        <h2>Part 2: Architectural Perspective Compression</h2>
+        <div class="desc">
+          Used different focal lengths to capture the Haas building, showing how
+          zooming in compresses perspective and alters the spatial relationship
+          between objects.
+        </div>
+        <div class="side-by-side">
+          <img src="media/William_1x.JPG" alt="William 1x" />
+          <img src="media/William_5x.JPG" alt="William 5x" />
+        </div>
+      </div>
+      <div class="section">
+        <h2>Part 3: The Dolly Zoom</h2>
+        <div class="desc">
+          Created an animated GIF of stuffed animals using multiple frames to
+          illustrate the dolly zoom effect, where the background appears to
+          change size relative to the subject.
+        </div>
+        <img
+          src="media/Stuffed_Animals.gif"
+          alt="Stuffed Animals GIF"
+          class="large-gif"
+        />
+      </div>
+    </main>
   </body>
 </html>

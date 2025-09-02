@@ -1,17 +1,96 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>My Portfolio</title>
+    <title>Mayank Patil | CS180 Portfolio</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style>
       body {
-        font-family: Arial, sans-serif;
-        margin: 20px;
+        font-family: "Segoe UI", Arial, sans-serif;
+        margin: 0;
+        background: linear-gradient(135deg, #e0e7ff 0%, #f0fdfa 100%);
+        color: #22223b;
+      }
+      header {
+        background: #3a86ff;
+        color: #fff;
+        padding: 40px 0 20px 0;
+        text-align: center;
+        border-bottom-left-radius: 40px;
+        border-bottom-right-radius: 40px;
+        box-shadow: 0 4px 24px rgba(58, 134, 255, 0.12);
+      }
+      header h1 {
+        margin: 0 0 10px 0;
+        font-size: 2.8rem;
+        letter-spacing: 2px;
+      }
+      header p {
+        margin: 0;
+        font-size: 1.3rem;
+        font-weight: 400;
+      }
+      main {
+        max-width: 700px;
+        margin: 40px auto;
+        background: #fff;
+        border-radius: 24px;
+        box-shadow: 0 2px 16px rgba(58, 134, 255, 0.08);
+        padding: 32px 28px;
+      }
+      h2 {
+        color: #3a86ff;
+        margin-top: 0;
+      }
+      .projects {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        margin-top: 32px;
+      }
+      .project-card {
+        background: #f1f5fd;
+        border-radius: 16px;
+        padding: 20px 24px;
+        box-shadow: 0 1px 6px rgba(58, 134, 255, 0.06);
+        transition: transform 0.15s, box-shadow 0.15s;
+      }
+      .project-card:hover {
+        transform: translateY(-4px) scale(1.02);
+        box-shadow: 0 4px 16px rgba(58, 134, 255, 0.13);
+      }
+      .project-card a {
+        color: #3a86ff;
+        text-decoration: none;
+        font-size: 1.2rem;
+        font-weight: 600;
+      }
+      .project-card a:hover {
+        text-decoration: underline;
+      }
+      @media (max-width: 600px) {
+        main {
+          padding: 16px 6px;
+        }
+        .project-card {
+          padding: 14px 10px;
+        }
       }
     </style>
   </head>
   <body>
-    <h1>Welcome to My CS180 Portfolio!</h1>
-    <a href="./0/index.html">Project 0</a><br />
-    <a href="./1/index.html">Project 1</a>
+    <header>
+      <h1>Mayank Patil</h1>
+      <p>Senior at UC Berkeley &mdash; Computer Science</p>
+    </header>
+    <main>
+      <h2>CS180 Portfolio</h2>
+      <div class="projects">
+        <div class="project-card">
+          <a href="./0/index.html">Project 0: Camera Effects &amp; Media</a>
+          <div>Exploring photography techniques and visual effects.</div>
+        </div>
+        <!-- Add more projects here as you complete them -->
+      </div>
+    </main>
   </body>
 </html>
