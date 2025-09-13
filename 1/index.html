@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>CS180 Project 1: Image Colorization</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 40px auto;
+        max-width: 1000px;
+        background: #fafbfc;
+        color: #222;
+      }
+      h1,
+      h2,
+      h3 {
+        color: #2c3e50;
+      }
+      nav {
+        margin-bottom: 30px;
+      }
+      nav a {
+        margin-right: 20px;
+        text-decoration: none;
+        color: #2980b9;
+        font-weight: bold;
+      }
+      nav a:hover {
+        text-decoration: underline;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 20px;
+      }
+      .grid-item {
+        text-align: center;
+      }
+      .grid-item img {
+        max-width: 100%;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+      }
+      .caption {
+        font-size: 0.9em;
+        color: #555;
+        margin-top: 8px;
+      }
+      .section {
+        margin-bottom: 50px;
+      }
+      hr {
+        margin: 40px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>CS180 Project 1: Image Colorization</h1>
+    <nav>
+      <a href="#introduction">Introduction</a>
+      <a href="#results">Results</a>
+      <a href="#discussion">Discussion</a>
+      <a href="#code">Code</a>
+    </nav>
+
+    <div class="section" id="introduction">
+      <h2>Introduction</h2>
+      <p>
+        This project implements image alignment for Prokudin-Gorskii glass plate
+        negatives. The goal is to align and merge the three color channels to
+        produce a decent quality color image.
+        <div style="height: 1em"></div>
+        For single scale alignment, I wrote a for loop to go over (-15,15)
+        displacement for both the r and g channels to try and align them with
+        the b channel. My metric for a good alignment was calculating the
+        Normalized Cross Correlation score on all alignments within 15
+        displacement of two channels this worked well.
+        <div style="height: 1em"></div>
+        For the image pyramid, I used rescale to downsample the large images so
+        I could test a larger proportion of displacements on a scaled version of
+        the image. This allowed me to find a displacement of a smaller image
+        which would then be used as a new center for calculating displacements
+        on the larger image. This is effective because we still use the same
+        amount of displacement loops but with each recursive call we find a
+        better center for trying displacements at a higher resolution.
+        <div style="height: 1em"></div>
+        Some issues I ran into were poor alignment for the larger images, and
+        cropping the image while performing NCC helped mitigate this issue
+        because the borders are solid colors for some of the plates, and should
+        not be considered for alignment evaluation.
+        <div style="height: 1em"></div>
+        For the emir, my alignment is not as good as possible because the channels have different scales of brightness, and the NCC stops being the best metric. It could be improved with a Sobel filter in the future
+      </p>
+    </div>
+
+    <div class="section" id="results">
+      <h2>Results</h2>
+
+      <h3>Small Images</h3>
+      <div class="grid">
+        <div class="grid-item">
+          <img
+            src="out_path/small_images/simple_align_NCC_cathedral.jpg"
+            alt="Cathedral"
+          />
+          <div class="caption">
+            Cathedral - Single scale NCC, offsets: b_shift (-2, -5), r_shift (1,
+            7)
+          </div>
+        </div>
+        <div class="grid-item">
+          <img
+            src="out_path/small_images/simple_align_NCC_monastery.jpg"
+            alt="Monastery"
+          />
+          <div class="caption">
+            Monastery - Single scale NCC, offsets: b_shift (-2, 3), r_shift (1,
+            6)
+          </div>
+        </div>
+        <div class="grid-item">
+          <img
+            src="out_path/small_images/simple_align_NCC_tobolsk.jpg"
+            alt="Tobolsk"
+          />
+          <div class="caption">
+            Tobolsk - Single scale NCC, offsets: b_shift (-3, -3), r_shift (1,
+            4)
+          </div>
+        </div>
+      </div>
+
+      <h3>Large Images</h3>
+      <div class="grid">
+        <div class="grid-item">
+          <img
+            src="out_path/large_images/pyramid_NCC_church.jpg"
+            alt="Church"
+          />
+          <div class="caption">
+            Church - Pyramid NCC, offsets: g_shift (4, 25), r_shift (-4, 58)
+          </div>
+        </div>
+        <div class="grid-item">
+          <img src="out_path/large_images/pyramid_NCC_emir.jpg" alt="Emir" />
+          <div class="caption">
+            Emir - Pyramid NCC, offsets: g_shift (24, 49), r_shift (56, 104)
+          </div>
+        </div>
+        <div class="grid-item">
+          <img
+            src="out_path/large_images/pyramid_NCC_harvesters.jpg"
+            alt="Train"
+          />
+          <div class="caption">
+            Harvesters - Pyramid NCC, offsets: g_shift (17, 60), r_shift (14,
+            124)
+          </div>
+        </div>
+        <div class="grid-item">
+          <img src="out_path/large_images/pyramid_NCC_icon.jpg" alt="Train" />
+          <div class="caption">
+            Icon - Pyramid NCC, offsets: g_shift (17, 41), r_shift (23, 89)
+          </div>
+        </div>
+        <div class="grid-item">
+          <img src="out_path/large_images/pyramid_NCC_italil.jpg" alt="Train" />
+          <div class="caption">
+            Italil - Pyramid NCC, offsets: g_shift (21, 38), r_shift (35, 76)
+          </div>
+        </div>
+        <div class="grid-item">
+          <img
+            src="out_path/large_images/pyramid_NCC_lastochikino.jpg"
+            alt="Train"
+          />
+          <div class="caption">
+            Lastochikino - Pyramid NCC, offsets: g_shift (-2, -3), r_shift (-9,
+            75)
+          </div>
+        </div>
+        <div class="grid-item">
+          <img src="out_path/large_images/pyramid_NCC_lugano.jpg" alt="Train" />
+          <div class="caption">
+            Lugano - Pyramid NCC, offsets: g_shift (-16, 41), r_shift (-29, 93)
+          </div>
+        </div>
+        <div class="grid-item">
+          <img src="out_path/large_images/pyramid_NCC_melons.jpg" alt="Train" />
+          <div class="caption">
+            Melons - Pyramid NCC, offsets: g_shift (10, 81), r_shift (13, 178)
+          </div>
+        </div>
+        <div class="grid-item">
+          <img
+            src="out_path/large_images/pyramid_NCC_self_portrait.jpg"
+            alt="Train"
+          />
+          <div class="caption">
+            Self_portrait - Pyramid NCC, offsets: g_shift (29, 79), r_shift (37,
+            176)
+          </div>
+        </div>
+        <div class="grid-item">
+          <img src="out_path/large_images/pyramid_NCC_siren.jpg" alt="Train" />
+          <div class="caption">
+            Siren - Pyramid NCC, offsets: g_shift (-6, 49), r_shift (-25, 96)
+          </div>
+        </div>
+        <div class="grid-item">
+          <img
+            src="out_path/large_images/pyramid_NCC_three_generations.jpg"
+            alt="Train"
+          />
+          <div class="caption">
+            3 generations - Pyramid NCC, offsets: g_shift (14, 53), r_shift (11,
+            111)
+          </div>
+        </div>
+      </div>
+
+      <h3>Additional Images from the Prokudin-Gorskii collection</h3>
+      <div class="grid">
+        <div class="grid-item">
+          <img
+            src="out_path/large_images/additional_pyramid_NCC_hut.jpg"
+            alt="Additional 1"
+          />
+          <div class="caption">
+            Hut, offsets: g_shift (3, 35), r_shift (4, 98)
+          </div>
+        </div>
+        <div class="grid-item">
+          <img
+            src="out_path/large_images/additional_pyramid_NCC_flower.jpg"
+            alt="Additional 2"
+          />
+          <div class="caption">
+            Flowers, offsets: g_shift (3, 51), r_shift (-6, 104)
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" id="discussion">
+      <h2>Discussion</h2>
+      <p>
+        Briefly discuss your approach, challenges, and what worked well or not.
+      </p>
+    </div>
+
+    <div class="section" id="code">
+      <h2>Code</h2>
+      <p>
+        <a href="proj1.ipynb" download>Download Jupyter Notebook</a>
+      </p>
+    </div>
+  </body>
+</html>
