@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Fun with Filters and Frequencies</title>
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+        max-width: 900px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+        color: #222;
+        background: #fff;
+      }
+      h1 {
+        text-align: center;
+        font-weight: 700;
+        margin-bottom: 2rem;
+        color: #0066cc;
+      }
+      h2 {
+        border-bottom: 3px solid #0066cc;
+        padding-bottom: 0.3rem;
+        margin-top: 3rem;
+        font-weight: 600;
+      }
+      h3 {
+        margin-top: 2rem;
+        font-weight: 600;
+        color: #004a99;
+      }
+      p {
+        line-height: 1.5;
+        font-size: 1rem;
+      }
+      pre {
+        background: #f3f3f3;
+        border: 1px solid #ccc;
+        padding: 1rem;
+        font-size: 0.9rem;
+        overflow-x: auto;
+        border-radius: 4px;
+        margin-top: 0.5rem;
+        white-space: pre-wrap;
+      }
+      img {
+        display: block;
+        max-width: 100%;
+        margin: 1rem 0;
+        border: 1px solid #bbb;
+        border-radius: 3px;
+      }
+      /* Layout images side by side responsively */
+      .image-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+        justify-content: center;
+      }
+
+      .image-row figure {
+        flex: 1 1 40%; /* each figure will try to take ~40% of row */
+        max-width: 300px; /* optional cap */
+        text-align: center;
+      }
+
+      .image-row img {
+        width: 100%;
+        height: auto;
+        border: 1px solid #bbb;
+        border-radius: 6px;
+      }
+
+      .image-row figcaption {
+        margin-top: 0.5rem;
+        font-size: 0.9rem;
+        color: #444;
+      }
+
+      footer {
+        margin-top: 4rem;
+        font-size: 0.9rem;
+        color: #555;
+        text-align: center;
+      }
+      a {
+        color: #0066cc;
+        text-decoration: none;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Fun with Filters and Frequencies</h1>
+
+    <!-- Part 1 -->
+    <h2>Part 1: Fun with Filters</h2>
+
+    <h3>1.1 Convolutions from Scratch</h3>
+    <p>
+      A convolution is the operation of applying a filter to an image by placing
+      the filter on top of each pixel and computing a dot product, then taking
+      the mean to determine the new value of the pixel. It is calculated by
+      taking the cross-correlation, except the filter is flipped across both the
+      x and y axis before it is applied. Here is my implementation With four
+      loops and two loops. The comparison with
+      <code>scipy.signal.convolve2d</code> is that the library function is much
+      faster than the four loop implementation. My four loop implementation is
+      very slow and takes lots of computations, but the two-loop version is
+      slightly faster. <code>scipy.signal.convolve2d</code> likely has many
+      optimizations such as better batching and caching that speeds up the
+      runtime compared the manual loops. For boundaries, my implementation pads
+      the original input with 0s, and then applies the convolution. On the other
+      hand, <code>scipy.signal.convolve2d</code> has different boundary options,
+      and can do fill with a default value such as 0 which I implemented in my
+      function. It can also handle wrapping and symmetrical boundaries for
+      different effects, such as not creating edges at the boundary of the
+      image.
+    </p>
+    <p>Paste your convolution function code snippets here:</p>
+    <pre><!-- Insert your convolution code here -->
+      dx_filter = np.array([[1,0,-1]])
+      dy_filter = np.array([[1],[0],[-1]])
+      box_9 = np.ones(81).reshape(9,9) / 81
+
+      def convolve_four_loops(im1, im2):
+          im2 = im2[::-1,::-1]
+          filter_x_radius = im2.shape[0] // 2
+          filter_y_radius = im2.shape[1] // 2
+          kernel_area = im2.shape[0] * im2.shape[1]
+          res = np.zeros(im1.shape)
+          for src_i in range(im1.shape[0]):
+              for src_j in range(im1.shape[1]):
+                  for dx in range(-filter_x_radius, filter_x_radius + 1):
+                      for dy in range(-filter_y_radius, filter_y_radius + 1):
+                          x = src_i + dx
+                          y = src_j + dy
+                          if 0 <= x < im1.shape[0] and 0 <= y < im1.shape[1]:
+                              res[src_i][src_j] += im2[dx+filter_x_radius][dy+filter_y_radius] * im1[x][y]
+          return res / kernel_area
+
+      def convolve_two_loops(im1, im2):
+          im2 = im2[::-1,::-1]
+          filter_x_radius = im2.shape[0] // 2
+          filter_y_radius = im2.shape[1] // 2
+          padded = np.pad(im1, (filter_x_radius*2, filter_y_radius*2))
+          res = np.zeros(im1.shape)
+          for src_i in range(im1.shape[0]):
+              for src_j in range(im1.shape[1]):
+                  im1_chunk = padded[src_i:src_i+2*filter_x_radius+1, src_j:src_j+2*filter_y_radius+1]
+                  res[src_i][src_j] = np.mean(im2*im1_chunk)
+          return res
+
+      self_dx_convolution = convolve_two_loops(mayank, dx_filter)
+      skio.imshow(self_dx_convolution)
+      skio.show()
+      self_dy_convolution = convolve_two_loops(mayank, dy_filter)
+      skio.imshow(self_dy_convolution)
+      skio.show()
+      self_box_convolution = convolve_two_loops(mayank, box_9)
+      self_box_convolution = sk.img_as_float(self_box_convolution)
+
+      skio.imshow(self_box_convolution)
+      skio.show()
+    </pre>
+
+    <div class="image-row">
+      <figure>
+        <img src="out_path/mayank.jpg" alt="Original image" />
+        <figcaption>Original image</figcaption>
+      </figure>
+
+      <figure>
+        <img
+          src="out_path/self_box_convolution.jpg"
+          alt="Blurred picture with 3x3 box filter"
+        />
+        <figcaption>Blurred picture with 3x3 box filter</figcaption>
+      </figure>
+
+      <figure>
+        <img
+          src="out_path/self_dx_mayank.jpg"
+          alt="Image convolved with Dx (horizontal derivative)"
+        />
+        <figcaption>Convolved with Dx (horizontal derivative)</figcaption>
+      </figure>
+
+      <figure>
+        <img
+          src="out_path/self_dy_mayank.jpg"
+          alt="Image convolved with Dy (vertical derivative)"
+        />
+        <figcaption>Convolved with Dy (vertical derivative)</figcaption>
+      </figure>
+    </div>
+
+    <h3>1.2 Finite Difference Operator on Cameraman Image</h3>
+    <p>
+      Partial derivatives Dx, Dy, gradient magnitude, and binarized edge image
+      results. In deciding the threshold for binarizing the gradient magnitude,
+      I had to make tradeoffs between how much noise was acceptable in the
+      image, as well as how many detailed edges I wanted to see. The more edges
+      I wanted to have visible, the more tolerant I had to be to noise. I
+      decreased the threshold until the back of the cameraman was barely
+      visible. This resulted in a bit of noise in the sky and the grass, which
+      was acceptable in my opinion, with a threshold of 0.23.
+    </p>
+    <div class="image-row">
+      <figure>
+        <img
+          src="out_path/cameraman/cameraman_dx.png"
+          alt="Cameraman image Dx derivative"
+        />
+        <figcaption>Cameraman image Dx derivative</figcaption>
+      </figure>
+
+      <figure>
+        <img
+          src="out_path/cameraman/cameraman_dy.png"
+          alt="Cameraman image Dy derivative"
+        />
+        <figcaption>Cameraman image Dy derivative</figcaption>
+      </figure>
+    </div>
+
+    <div class="image-row">
+      <figure>
+        <img
+          src="out_path/cameraman/cameraman_grad_magnitude.png"
+          alt="Gradient magnitude of Cameraman image"
+        />
+        <figcaption>Gradient magnitude</figcaption>
+      </figure>
+
+      <figure>
+        <img
+          src="out_path/cameraman/cameraman_binarized_grad_magnitude.png"
+          alt="Binarized edge image"
+        />
+        <figcaption>Binarized edge image with threshold 0.23</figcaption>
+      </figure>
+    </div>
+
+    <h3>1.3 Derivative of Gaussian (DoG) Filter</h3>
+    <p>
+      I used a 9x9 gaussian kernel and convolved it with the cameraman to make a
+      smoothed image. I then applied the same dx and dy filters to get the
+      partial derivatives and then took the magnitude and binarized the output.
+      The resulting edges were more defined and there was much less noise at the
+      same threshold of 0.23 than the gradient magnitude binarization applied to
+      the original image.
+    </p>
+    <div class="image-row">
+      <figure>
+        <img src="out_path/cameraman/cameraman_dx_smooth.png" />
+        <figcaption>Cameraman smoothed image Dx derivative</figcaption>
+      </figure>
+
+      <figure>
+        <img src="out_path/cameraman/cameraman_dy_smooth.png" />
+        <figcaption>Cameraman smoothed image Dy derivative</figcaption>
+      </figure>
+    </div>
+
+    <div class="image-row">
+      <figure>
+        <img src="out_path/cameraman/cameraman_grad_magnitude_smooth.png" />
+        <figcaption>Gradient magnitude of smoothed cameraman</figcaption>
+      </figure>
+
+      <figure>
+        <img
+          src="out_path/cameraman/cameraman_binarized_grad_magnitude_smooth.png"
+        />
+        <figcaption>
+          Binarized edge on smoothed image with threshold 0.23
+        </figcaption>
+      </figure>
+      <p>
+        Convolve the gaussian with D_x and D_y and display the resulting DoG
+        filters as images. Applying the new filter to any image results in the
+        same image as applying the gaussian then gradient filters to the
+        original image. Applying one filter to the image however, is faster
+        computationally than performing 2 sequential convolutions.
+      </p>
+      <figure>
+        <img src="out_path/cameraman/dog_dx.png" />
+        <figcaption>DoG dx combined filter</figcaption>
+      </figure>
+
+      <figure>
+        <img src="out_path/cameraman/dog_dy.png" />
+        <figcaption>DoG dy combined filter</figcaption>
+      </figure>
+      <figure>
+        <img src="out_path/cameraman/cameraman_binarized_dog.png" />
+        <figcaption>Result of applying DoG combined filter</figcaption>
+      </figure>
+    </div>
+
+    <!-- Part 2 -->
+    <h2>Part 2: Fun with Frequencies</h2>
+
+    <h3>2.1 Image Sharpening (Unsharp Mask)</h3>
+    <p>
+      I implemented the unsharp mask filter by combining the gaussian filter
+      with a unit impulse in a linear combination. We can get the high frequency
+      image by subtracting the smoothed image from the original, which basically
+      highlights the edges. In order to sharpen the image, we need to do
+      something that will in effect do the opposite of the smoothing that
+      gaussian does, and for that we negate the gaussian and apply it as a
+      filter. However, this is not complete because we need some way to
+      highilght the bright pixel values, ie edges. To do this I used an all 0s
+      filter with the center very bright so the individual pixel is preserved
+      with higher intensity. The negated gaussian has the inverse effect by
+      removing any smoothing and ends up emphasizing the edges throughout the
+      image. Varying the sharpening amount as I did with alpha = 5 and alpha =
+      10 causes different levels of intensity on the edges in relation to the
+      rest of the image. For the image of Soham, the COSTCO logo in the
+      background becomes sharper and easier to read as alpha increases, because
+      the smoothing with the surroundings is reduced and the edges are
+      highlighted more strongly.
+    </p>
+
+    <div class="image-row">
+      <figure>
+        <img src="out_path/sharpened/taj_blur.jpg" />
+        <figcaption>Taj blur 3x3 gaussian</figcaption>
+      </figure>
+      <figure>
+        <img src="out_path/sharpened/taj_high_freq.jpg" />
+        <figcaption>Taj high Frequencies</figcaption>
+      </figure>
+      <figure>
+        <img src="out_path/sharpened/taj_sharpened_5.jpg" />
+        <figcaption>Taj sharpened alpha = 5</figcaption>
+      </figure>
+      <figure>
+        <img src="out_path/sharpened/taj_sharpened_10.jpg" />
+        <figcaption>Taj sharpened alpha = 10</figcaption>
+      </figure>
+
+      <figure>
+        <img src="out_path/sharpened/soham.jpg" />
+        <figcaption>Soham</figcaption>
+      </figure>
+      <figure>
+        <img src="out_path/sharpened/soham_blur.jpg" />
+        <figcaption>soham blur 3x3 gaussian</figcaption>
+      </figure>
+      <figure>
+        <img src="out_path/sharpened/soham_high_freq.jpg" />
+        <figcaption>soham high Frequencies</figcaption>
+      </figure>
+      <figure>
+        <img src="out_path/sharpened/soham_sharpened_5.jpg" />
+        <figcaption>soham sharpened alpha = 5</figcaption>
+      </figure>
+      <figure>
+        <img src="out_path/sharpened/soham_sharpened_10.jpg" />
+        <figcaption>soham sharpened alpha = 10</figcaption>
+      </figure>
+
+      <p>
+        Blurring an image and then sharpening the blurred image: The sharpened
+        blur is closer to the original image in terms of the intensity of its
+        edges compared to the blur. The cancelling out of the blur is not
+        exactly an inverse, but it does fairly well to get close to the original
+        image in terms of the sharpness.
+      </p>
+      <figure>
+        <img src="out_path/sharpened/nachos.jpg" />
+        <figcaption>nachos</figcaption>
+      </figure>
+      <figure>
+        <img src="out_path/sharpened/nachos_blur.jpg" />
+        <figcaption>nachos blurred 3x3</figcaption>
+      </figure>
+      <figure>
+        <img src="out_path/sharpened/nachos_sharpened_5.jpg" />
+        <figcaption>sharpened nachos after blur alpha = 5</figcaption>
+      </figure>
+    </div>
+
+    <h3>2.2 Hybrid Images</h3>
+    <p>
+      When viewed up close, the fine details of an image (high frequencies)
+      stand out, while from farther away, the broader structures (low
+      frequencies) become more prominent. By blending the low-frequency content
+      of one image with the high-frequency content of another, we can create a
+      hybrid image that changes appearance depending on the viewing distance.
+    </p>
+    <div class="image-row">
+      <figure>
+        <img src="media/bottle_high_freq.jpeg" />
+        <figcaption>Original bottle to be used as high freq</figcaption>
+      </figure>
+      <figure>
+        <img src="media/bottle_low_freq.jpeg" />
+        <figcaption>Original bottle to be used as low freq</figcaption>
+      </figure>
+      <figure>
+        <img src="out_path/hybrid/bottle_high_aligned.jpg" />
+        <figcaption>Aligned bottle to be used as high freq</figcaption>
+      </figure>
+      <figure>
+        <img src="out_path/hybrid/bottle_low_aligned.jpg" />
+        <figcaption>Aligned bottle to be used as low freq</figcaption>
+      </figure>
+
+      <figure>
+        <img src="out_path/hybrid/bottle_high_aligned_filtered.jpg" />
+        <figcaption>
+          high freq filtered bottle, chose cutoff frequency sigma = 12 for
+          high-pass filter
+        </figcaption>
+      </figure>
+      <figure>
+        <img src="out_path/hybrid/bottle_low_aligned_filtered.jpg" />
+        <figcaption>
+          low freq filtered bottle, chose cutoff frequency sigma = 3 for
+          low-pass filter
+        </figcaption>
+      </figure>
+      <figure>
+        <img src="out_path/hybrid/hybrid_bottle.jpg" />
+        <figcaption>Hybrid Bottles</figcaption>
+      </figure>
+    </div>
+
+    <p>Fourier Transforms of bottles</p>
+    <div class="image-row">
+      <figure>
+        <img src="out_path/hybrid/bottle_high_aligned_fft.jpg" />
+        <figcaption>FFT of original bottle used for high frequency</figcaption>
+      </figure>
+      <figure>
+        <img src="out_path/hybrid/bottle_low_aligned_fft.jpg" />
+        <figcaption>FFT of original bottle used for low frequency</figcaption>
+      </figure>
+
+      <figure>
+        <img src="out_path/hybrid/bottle_high_filtered_fft.jpg" />
+        <figcaption>
+          FFT of high frequency filtered bottle, sigma = 12
+        </figcaption>
+      </figure>
+      <figure>
+        <img src="out_path/hybrid/bottle_low_filtered_fft.jpg" />
+        <figcaption>FFT of low frequency filtered bottle, sigma = 3</figcaption>
+      </figure>
+
+      <figure>
+        <img src="out_path/hybrid/bottle_hybrid_fft.jpg" />
+        <figcaption>FFT of hybrid image of bottles</figcaption>
+      </figure>
+    </div>
+    <p>Results for other pairs of high and low frequency images</p>
+    <div class="image-row">
+      <figure>
+        <img src="media/DerekPicture.jpg" />
+        <figcaption>Derek, low-freq input</figcaption>
+      </figure>
+      <figure>
+        <img src="media/nutmeg.jpg" />
+        <figcaption>nutmeg, high-freq input</figcaption>
+      </figure>
+      <figure>
+        <img src="out_path/hybrid/hybrid_dn.jpg" />
+        <figcaption>Hybrid image of Derek and Nutmeg</figcaption>
+      </figure>
+    </div>
+    <div class="image-row">
+      <figure>
+        <img src="media/frown.jpeg" />
+        <figcaption>Mayank frowning, low-freq input</figcaption>
+      </figure>
+      <figure>
+        <img src="media/smile.jpeg" />
+        <figcaption>Mayank smiling, high-freq input</figcaption>
+      </figure>
+      <figure>
+        <img src="out_path/hybrid/hybrid_expression.jpg" />
+        <figcaption>Hybrid image of Mayank's expressions</figcaption>
+      </figure>
+    </div>
+
+    <h3>2.3 Gaussian and Laplacian Stacks</h3>
+    <p>
+      Below are the Gaussian and Laplacian stacks for oranges and apples. Each
+      fruit is shown in a 5×2 grid: rows correspond to stack levels (0–4), and
+      columns show the Gaussian image (left) and Laplacian image (right).
+    </p>
+
+    <!-- Oranges -->
+    <h4>Oranges</h4>
+    <div class="image-row" style="flex-direction: column">
+      <div class="image-row">
+        <figure>
+          <img src="out_path/stacks/orange_gaussian_0.jpg" />
+          <figcaption>Orange Gaussian 0</figcaption>
+        </figure>
+        <figure>
+          <img src="out_path/stacks/orange_laplacian_0.jpg" />
+          <figcaption>Orange Laplacian 0</figcaption>
+        </figure>
+      </div>
+      <div class="image-row">
+        <figure>
+          <img src="out_path/stacks/orange_gaussian_1.jpg" />
+          <figcaption>Orange Gaussian 1</figcaption>
+        </figure>
+        <figure>
+          <img src="out_path/stacks/orange_laplacian_1.jpg" />
+          <figcaption>Orange Laplacian 1</figcaption>
+        </figure>
+      </div>
+      <div class="image-row">
+        <figure>
+          <img src="out_path/stacks/orange_gaussian_2.jpg" />
+          <figcaption>Orange Gaussian 2</figcaption>
+        </figure>
+        <figure>
+          <img src="out_path/stacks/orange_laplacian_2.jpg" />
+          <figcaption>Orange Laplacian 2</figcaption>
+        </figure>
+      </div>
+      <div class="image-row">
+        <figure>
+          <img src="out_path/stacks/orange_gaussian_3.jpg" />
+          <figcaption>Orange Gaussian 3</figcaption>
+        </figure>
+        <figure>
+          <img src="out_path/stacks/orange_laplacian_3.jpg" />
+          <figcaption>Orange Laplacian 3</figcaption>
+        </figure>
+      </div>
+      <div class="image-row">
+        <figure>
+          <img src="out_path/stacks/orange_gaussian_4.jpg" />
+          <figcaption>Orange Gaussian 4</figcaption>
+        </figure>
+        <figure>
+          <img src="out_path/stacks/orange_laplacian_4.jpg" />
+          <figcaption>Orange Laplacian 4</figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <!-- Apples -->
+    <h4>Apples</h4>
+    <div class="image-row" style="flex-direction: column">
+      <div class="image-row">
+        <figure>
+          <img src="out_path/stacks/apple_gaussian_0.jpg" />
+          <figcaption>Apple Gaussian 0</figcaption>
+        </figure>
+        <figure>
+          <img src="out_path/stacks/apple_laplacian_0.jpg" />
+          <figcaption>Apple Laplacian 0</figcaption>
+        </figure>
+      </div>
+      <div class="image-row">
+        <figure>
+          <img src="out_path/stacks/apple_gaussian_1.jpg" />
+          <figcaption>Apple Gaussian 1</figcaption>
+        </figure>
+        <figure>
+          <img src="out_path/stacks/apple_laplacian_1.jpg" />
+          <figcaption>Apple Laplacian 1</figcaption>
+        </figure>
+      </div>
+      <div class="image-row">
+        <figure>
+          <img src="out_path/stacks/apple_gaussian_2.jpg" />
+          <figcaption>Apple Gaussian 2</figcaption>
+        </figure>
+        <figure>
+          <img src="out_path/stacks/apple_laplacian_2.jpg" />
+          <figcaption>Apple Laplacian 2</figcaption>
+        </figure>
+      </div>
+      <div class="image-row">
+        <figure>
+          <img src="out_path/stacks/apple_gaussian_3.jpg" />
+          <figcaption>Apple Gaussian 3</figcaption>
+        </figure>
+        <figure>
+          <img src="out_path/stacks/apple_laplacian_3.jpg" />
+          <figcaption>Apple Laplacian 3</figcaption>
+        </figure>
+      </div>
+      <div class="image-row">
+        <figure>
+          <img src="out_path/stacks/apple_gaussian_4.jpg" />
+          <figcaption>Apple Gaussian 4</figcaption>
+        </figure>
+        <figure>
+          <img src="out_path/stacks/apple_laplacian_4.jpg" />
+          <figcaption>Apple Laplacian 4</figcaption>
+        </figure>
+      </div>
+    </div>
+  </body>
+</html>
