@@ -87,8 +87,6 @@
     ```
     <!-- A.1: Shoot and digitize pictures (20 pts) -->
     <h2>A.1: Shoot and digitize pictures (20 pts)</h2>
-    <p>Describe your process and include image sets below.</p>
-
     <div class="image-row">
       <figure>
         <img src="out_path/lounge/lounge_l.jpeg" />
@@ -114,8 +112,7 @@
     <!-- A.2: Recover homographies (20 pts) -->
     <h2>A.2: Recover homographies (20 pts)</h2>
     <p>
-      Show your correspondences, system of equations, and recovered homography
-      matrix here.
+      Correspondences, system of equations, and recovered homography matrix.
     </p>
 
     <div class="image-row">
@@ -124,85 +121,237 @@
         <figcaption>Lounge with Correspondences</figcaption>
       </figure>
       <figure>
-        <img src="out_path/a2/image2.jpg" alt="Correspondences Image 2" />
+        <img src="out_path/grimes/grimes_correspondences.jpeg" />
         <figcaption>Grimes with Correspondences</figcaption>
       </figure>
+      <figure>
+        <img src="out_path/door/door_correspondences.jpeg" />
+        <figcaption>Door with Correspondences</figcaption>
+      </figure>
     </div>
+
+    <div class="image-row">
+      <figure>
+        <img src="out_path/math/derived_equations.png" />
+        <figcaption>Homography equations</figcaption>
+      </figure>
+      <figure>
+        <img src="out_path/math/matrix_form_equations.png" />
+        <figcaption>
+          Homography equations in matrix form (credit cs180 discussion 5)
+        </figcaption>
+      </figure>
+    </div>
+
+    <h4>Calculated 3×3 Homography Matrix for Lounge Pictures</h4>
+    <pre><code>
+      H_lounge =
+      [[ 1.34479533e+00   8.20045522e-04  -3.47192413e+02]
+      [ 1.33590174e-01   1.20783249e+00  -1.06646346e+02]
+      [ 2.60974110e-04   1.63028891e-05   1.00000000e+00]]
+    </code></pre>
 
     <!-- A.3: Warp the images (20 pts) -->
     <h2>A.3: Warp the images (20 pts)</h2>
-    <p>
-      Include results of nearest-neighbor and bilinear interpolation. Show
-      rectification examples.
-    </p>
+    <p>Nearest-neighbor, Bilinear interpolation and Rectification.</p>
 
     <div class="image-row">
       <figure>
-        <img src="out_path/a3/original.jpg" alt="Original Image" />
-        <figcaption>Original Image</figcaption>
+        <img src="out_path/grimes/grimes_l_vertical.jpeg" />
+        <figcaption>Original left Grimes</figcaption>
       </figure>
       <figure>
-        <img
-          src="out_path/a3/rectified_nn.jpg"
-          alt="Rectified (Nearest Neighbor)"
-        />
-        <figcaption>Rectified (Nearest Neighbor)</figcaption>
-      </figure>
-      <figure>
-        <img src="out_path/a3/rectified_bil.jpg" alt="Rectified (Bilinear)" />
-        <figcaption>Rectified (Bilinear)</figcaption>
+        <img src="out_path/grimes/grimes_r_vertical.jpeg" />
+        <figcaption>Original right Grimes</figcaption>
       </figure>
     </div>
+    <div class="image-row">
+      <figure>
+        <img src="out_path/warp/grimes_l_warp_nearest.jpeg" />
+        <figcaption>Rectified Grimes L (Nearest Neighbor)</figcaption>
+      </figure>
+      <figure>
+        <img src="out_path/warp/grimes_l_warp_billinear.jpeg" />
+        <figcaption>Rectified Grimes L (Billinear)</figcaption>
+      </figure>
+    </div>
+
+    <div class="image-row">
+      <figure>
+        <img src="out_path/lounge/lounge_l.jpeg" />
+        <figcaption>Original left lounge</figcaption>
+      </figure>
+      <figure>
+        <img src="out_path/lounge/lounge_r.jpeg" />
+        <figcaption>Original right lounge</figcaption>
+      </figure>
+    </div>
+    <div class="image-row">
+      <figure>
+        <img src="out_path/warp/lounge_l_warp_nearest.jpeg" />
+        <figcaption>Rectified Lounge L (Nearest Neighbor)</figcaption>
+      </figure>
+      <figure>
+        <img src="out_path/warp/lounge_l_warp_billinear.jpeg" />
+        <figcaption>Rectified Lounge L (Billinear)</figcaption>
+      </figure>
+    </div>
+
+    <div class="image-row">
+      <figure>
+        <img src="out_path/sidewalk/sidewalk_sign.jpeg" />
+        <figcaption>Sidewalk Sign side-view</figcaption>
+      </figure>
+    </div>
+
+    <div class="image-row">
+      <figure>
+        <img src="out_path/warp/sidewalk_sign_warp_nearest.jpeg" />
+        <figcaption>Rectified Sidewalk Sign (Nearest Neighbor)</figcaption>
+      </figure>
+      <figure>
+        <img src="out_path/warp/sidewalk_sign_warp_billinear.jpeg" />
+        <figcaption>Rectified Sidewalk Sign (Billinear)</figcaption>
+      </figure>
+    </div>
+
+    <div class="image-row">
+      <figure>
+        <img src="out_path/warp/sidewalk_sign_warp_nearest_cropped.jpeg" />
+        <figcaption>
+          Rectified Sidewalk Sign (Nearest Neighbor) Cropped
+        </figcaption>
+      </figure>
+      <figure>
+        <img src="out_path/warp/sidewalk_sign_warp_billinear_cropped.jpeg" />
+        <figcaption>Rectified Sidewalk Sign (Billinear) Cropped</figcaption>
+      </figure>
+    </div>
+
+    <div class="image-row">
+      <figure>
+        <img src="out_path/door/door.jpeg" />
+        <figcaption>Door side-view</figcaption>
+      </figure>
+    </div>
+
+    <div class="image-row">
+      <figure>
+        <img src="out_path/warp/door_rectangle_warp_nearest.jpeg" />
+        <figcaption>Rectified Door (Nearest Neighbor)</figcaption>
+      </figure>
+      <figure>
+        <img src="out_path/warp/door_rectangle_warp_Billinear.jpeg" />
+        <figcaption>Rectified Door (Billinear)</figcaption>
+      </figure>
+    </div>
+
+    <div class="image-row">
+      <figure>
+        <img src="out_path/warp/door_rectangle_warp_nearest_cropped.jpeg" />
+        <figcaption>Rectified Door (Nearest Neighbor) Cropped</figcaption>
+      </figure>
+      <figure>
+        <img src="out_path/warp/door_rectangle_warp_Billinear_cropped.jpeg" />
+        <figcaption>Rectified Door (Billinear) Cropped</figcaption>
+      </figure>
+    </div>
+
+    <p>
+      For image rectification, Billinear Interpolation for inverse mapping
+      results in a smoother warped image because it takes all neigboring cells
+      into account with a weighted average. That's why the sidewalk sign looks
+      smoother when it was warped with Billinear interpolation. On the other
+      hand, nearest neighbor interpolation is quicker (but not asymptotically)
+      because it just has to take the nearest pixel which eliminates the need
+      for the weighting computation. Asymptotically both methods have the same
+      runtime, but Billinear interpolation is about 1.5 times slower than
+      nearest neighbor interpolation.
+    </p>
 
     <!-- A.4: Blend images into a mosaic (20 pts) -->
     <h2>A.4: Blend images into a mosaic (20 pts)</h2>
-    <p>Show three mosaics with source images and final blended results.</p>
+    <p>Source images and final blended mosaic results.</p>
 
-    <h3>Mosaic 1</h3>
+    <h3>Mosaic 1 Lounge</h3>
     <div class="image-row">
       <figure>
-        <img src="out_path/a4/mosaic1_src1.jpg" alt="Mosaic 1 Source 1" />
-        <figcaption>Mosaic 1 Source 1</figcaption>
+        <img src="out_path/lounge/lounge_l.jpeg" />
+        <figcaption>Lounge left</figcaption>
       </figure>
       <figure>
-        <img src="out_path/a4/mosaic1_src2.jpg" alt="Mosaic 1 Source 2" />
-        <figcaption>Mosaic 1 Source 2</figcaption>
+        <img src="out_path/lounge/lounge_r.jpeg" />
+        <figcaption>Lounge r</figcaption>
       </figure>
       <figure>
-        <img src="out_path/a4/mosaic1_result.jpg" alt="Mosaic 1 Result" />
-        <figcaption>Mosaic 1 Result</figcaption>
+        <img src="out_path/blend/lounge_blend_raw.jpeg" />
+        <figcaption>Lounge blend without weighting</figcaption>
+      </figure>
+      <figure>
+        <img src="out_path/blend/lounge_blend_weighted.jpeg" />
+        <figcaption>Lounge blend with weighting</figcaption>
       </figure>
     </div>
 
-    <h3>Mosaic 2</h3>
+    <h3>Mosaic 2 Grimes</h3>
     <div class="image-row">
       <figure>
-        <img src="out_path/a4/mosaic2_src1.jpg" alt="Mosaic 2 Source 1" />
-        <figcaption>Mosaic 2 Source 1</figcaption>
+        <img src="out_path/grimes/grimes_l_vertical.jpeg" />
+        <figcaption>Grimes left</figcaption>
       </figure>
       <figure>
-        <img src="out_path/a4/mosaic2_src2.jpg" alt="Mosaic 2 Source 2" />
-        <figcaption>Mosaic 2 Source 2</figcaption>
+        <img src="out_path/grimes/grimes_r_vertical.jpeg" />
+        <figcaption>Grimes right</figcaption>
       </figure>
       <figure>
-        <img src="out_path/a4/mosaic2_result.jpg" alt="Mosaic 2 Result" />
-        <figcaption>Mosaic 2 Result</figcaption>
+        <img src="out_path/blend/grimes_blend_raw.jpeg" />
+        <figcaption>Grimes blend without weighting</figcaption>
+      </figure>
+      <figure>
+        <img src="out_path/blend/grimes_blend_weighted.jpeg" />
+        <figcaption>Grimes blend with weighting</figcaption>
       </figure>
     </div>
 
-    <h3>Mosaic 3</h3>
+    <h3>Mosaic 3 Door</h3>
     <div class="image-row">
       <figure>
-        <img src="out_path/a4/mosaic3_src1.jpg" alt="Mosaic 3 Source 1" />
-        <figcaption>Mosaic 3 Source 1</figcaption>
+        <img src="out_path/door/door_l.jpeg" />
+        <figcaption>Door left</figcaption>
       </figure>
       <figure>
-        <img src="out_path/a4/mosaic3_src2.jpg" alt="Mosaic 3 Source 2" />
-        <figcaption>Mosaic 3 Source 2</figcaption>
+        <img src="out_path/door/door_r.jpeg" />
+        <figcaption>Door right</figcaption>
       </figure>
       <figure>
-        <img src="out_path/a4/mosaic3_result.jpg" alt="Mosaic 3 Result" />
-        <figcaption>Mosaic 3 Result</figcaption>
+        <img src="out_path/blend/door_blend_raw.jpeg" />
+        <figcaption>Door blend without weighting</figcaption>
+      </figure>
+      <figure>
+        <img src="out_path/blend/door_blend_weighted.jpeg" />
+        <figcaption>Door blend with weighting</figcaption>
+      </figure>
+    </div>
+
+    <p>
+      For image blending once I computed the warped image via the homography
+      matrix given a set of correspondence points, I used a weighted average of
+      the pixels from the left warped image and right image if they were in the
+      overlapping region. For each pixel in the overlapping output blend, I
+      computed the weighted horizontal distance from each image based on its
+      distance from the image boundary, which was the right side of the warped
+      left image, and the left boundary of the right image. Pixels closer to the
+      right image's boundary would get more weight from the right image than the
+      left warped image, and pixels closer to the warped left image's right
+      boundary would get more weight from the left warped image than the right
+      image. This approach helps visually eliminate the vertical edge boundary
+      and produces a smoother transition between the images in the blended
+      mosaic.
+    </p>
+    <div class="image-row">
+      <figure>
+        <img src="out_path/math/weighted_averaging_math.jpeg" />
+        <figcaption>Overlapping Pixel Weighting formula</figcaption>
       </figure>
     </div>
 
